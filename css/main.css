@@ -1,0 +1,32 @@
+body {
+    padding-top: 1em;
+}
+
+.delItem {
+    margin-right: 20px;
+    float: right;
+}
+
+.hidden {
+    display: none;
+}
+
+.btn-circ {
+    border-radius: 15px;
+}
+
+.completed {
+    text-decoration: line-through;
+}
+
+input[type=checkbox] {
+    margin-right: .5em;
+}
+
+ul {
+    list-style: none;
+}
+
+div#filterDiv {
+    padding: 1em;
+}
