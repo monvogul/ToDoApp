@@ -90,11 +90,17 @@
             .prop("checked", isItmComplete);
 
         var spn = $("<span/>").text(item.text);
+        var input = $('<input/>')
+            .attr("type", "text")
+            .addClass("edit")
+            .val(item.text);
+
         var del = $("<i/>").addClass("fa fa-trash-o delItem");
         var div = $('<div/>');
 
         div.append(chk);
         div.append(spn);
+        div.append(input);
         div.append(del);
         node.append(div);
 
@@ -109,20 +115,44 @@
         var liItem = $(clickedItm).closest("li");
 
         liItem && liItem.toggleClass("completed");
-        this.storageHelper().updateStorage(this.storedNotes, $(liItem).attr("id"), false, $(liItem).hasClass("completed"));
+        this.storageHelper().updateStorage(this.storedNotes, $(liItem).attr("id"), false, $(liItem).hasClass("completed"),null);
 
     };
 
-
+    /**
+     * deletes an item
+     */
     proto.deleteItem = function (event) {
         var clickedItm = event.target;
         var liItem = $(clickedItm).closest("li");
 
-        this.storageHelper().updateStorage(this.storedNotes, $(liItem).attr("id"), true, null);
+        this.storageHelper().updateStorage(this.storedNotes, $(liItem).attr("id"), true, false,null);
         liItem && liItem.remove();
 
     };
 
+    /**
+     * edits an item
+     */
+    proto.editItem = function(event) {
+
+        var liItem = $(event.target).closest("li");
+        var editSpan = $(event.target);
+        var editInput = $(liItem).find(".edit");
+
+        liItem.addClass("editing");
+        editInput.focus();
+        var that =this;
+        editInput.on("keypress", function (event) {
+
+            if (event.keyCode === ENTER) {
+                editSpan.text(editInput.val());
+                liItem.removeClass("editing");
+                that.storageHelper().updateStorage(that.storedNotes, $(liItem).attr("id"), false, false,editInput.val());
+            }
+
+        })
+    }
 
     /**
      * Event listeners for various user actions
@@ -131,6 +161,7 @@
         this.insert.on("keypress", this.insertItem.bind(this));
         this.list.on("click", "input[type=checkbox]", this.toggleItem.bind(this));
         this.list.on("click", "i", this.deleteItem.bind(this));
+        this.list.on("dblclick", "span", this.editItem.bind(this));
         this.filterDiv.on("click", "button", this.filterByState.bind(this));
 
     };
@@ -154,12 +185,14 @@
 
                 return localStore && localStore.getItem(key) && JSON.parse(localStore.getItem(key)) || [];
             },
-            updateStorage = function (allNotes, id, isRemove, isComplete) {
+            updateStorage = function (allNotes, id, isRemove, isComplete,txt) {
                 var i = getItemIndById(id, allNotes);
                 if (isRemove) {
                     allNotes.splice(i, 1);
-                } else {
+                } else if(isComplete) {
                     allNotes[i].completed = isComplete;
+                }else if(txt){
+                    allNotes[i].text = txt ;
                 }
                 localStorage.setItem(STR_KEY, JSON.stringify(allNotes));
             };
