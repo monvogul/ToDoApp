@@ -6,12 +6,7 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"
             integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
             crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
-            integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
-            crossorigin="anonymous"></script>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
           integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <link href="css/main.css" rel="stylesheet">
@@ -19,25 +14,24 @@
 
 </head>
 <body>
-<div class="container">
-    <div class="row">
-        <div class="col-md-12 ">
-            <input type="text" id="insertNote" style="width:100%;height:35px ;" placeholder="Take a note.."/>
-            <div id="filterDiv">
-                <button id="all" class="btn btn-sm btn-secondary btn-circ">All</button>
-                <button id="incomplete" class="btn btn-sm btn-info btn-circ">Incomplete</button>
-                <button id="complete" class="btn btn-sm btn-info btn-circ">Completed</button>
-            </div>
-            <div class="card">
-                <h4 class="card-header">
-                    ToDo List
-                </h4>
-                <ul id="noteList" class="card-text"></ul>
-            </div>
-        </div>
-    </div>
+<header> <h2 class="heading">Todos</h2> </header>
+<section class="newNote"><input type="text" id="insertNote" style="width:100%;height:35px ;" placeholder="Take a note.."/></section>
 
-</div>
+<section class="container">
+
+
+                <ul id="noteList"></ul>
+
+    </section>
+    <footer class="filters">
+            <button id="all" class="btn-circ">All</button>
+            <button id="incomplete" class="btn-circ">Incomplete</button>
+            <button id="complete" class="btn-circ">Completed</button>
+
+    </footer>
+
+
+
 </body>
 
 </html>
