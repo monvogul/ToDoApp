@@ -34,7 +34,7 @@
 
     /**
      * shows items in a particular state: all, complete or incomplete
-    */
+     */
     proto.filterByState = function (event) {
 
         var allItems = Array.prototype.slice.call(this.list.children('li'));
@@ -42,8 +42,8 @@
         var action = btn.id;
 
         $('#noteList').find('li').removeClass("hidden");
-        $('#filterDiv').find('button').removeClass('btn-secondary').addClass('btn-info');
-        $(btn).removeClass('btn-info').addClass('btn-secondary');
+        $('#filterDiv').find('button').removeClass('active').addClass('btn-circ');
+        $(btn).addClass('active');
 
         for (var i = 0; i < allItems.length; i++) {
             var anItem = (allItems[i]);
@@ -55,7 +55,7 @@
         }
     };
 
-     /**
+    /**
      * Captures key press event on text box and
      *  calls createNode to add new item to list
      */
@@ -69,7 +69,7 @@
                 id: +new Date()
             };
             this.storedNotes.push(item);
-            this.list.append(this.createNode(item));
+            this.list.append(this.createNode(item).hide("fast").slideDown("fast"));
             this.storageHelper().setItemInStore(STR_KEY, this.storedNotes);
             element.value = '';
         }
@@ -85,21 +85,26 @@
             .attr("id", item.id)
             .toggleClass('completed', isItmComplete);
 
+        var  inputId = "chk" + ( +new Date());
         var chk = $('<input/>')
             .attr("type", "checkbox")
+            .attr("id", inputId)
             .prop("checked", isItmComplete);
 
-        var spn = $("<span/>").text(item.text);
         var input = $('<input/>')
             .attr("type", "text")
             .addClass("edit")
             .val(item.text);
 
+        var label = $("<label/>")
+            .text(item.text)
+           .attr("for",inputId);
+
         var del = $("<i/>").addClass("fa fa-trash-o delItem");
         var div = $('<div/>');
 
         div.append(chk);
-        div.append(spn);
+        div.append(label);
         div.append(input);
         div.append(del);
         node.append(div);
@@ -126,8 +131,10 @@
         var clickedItm = event.target;
         var liItem = $(clickedItm).closest("li");
 
-        this.storageHelper().updateStorage(this.storedNotes, $(liItem).attr("id"), true, false,null);
-        liItem && liItem.remove();
+        this.storageHelper().updateStorage(this.storedNotes, $(liItem).attr("id"), true, null,null);
+        liItem && liItem.slideUp("fast",function(){
+            liItem.remove();
+        });
 
     };
 
@@ -137,7 +144,7 @@
     proto.editItem = function(event) {
 
         var liItem = $(event.target).closest("li");
-        var editSpan = $(event.target);
+        var editLabel =$(liItem).find("label");
         var editInput = $(liItem).find(".edit");
 
         liItem.addClass("editing");
@@ -146,9 +153,9 @@
         editInput.on("keypress", function (event) {
 
             if (event.keyCode === ENTER) {
-                editSpan.text(editInput.val());
+                editLabel.text(editInput.val());
                 liItem.removeClass("editing");
-                that.storageHelper().updateStorage(that.storedNotes, $(liItem).attr("id"), false, false,editInput.val());
+                that.storageHelper().updateStorage(that.storedNotes, $(liItem).attr("id"), false, null,editInput.val());
             }
 
         })
@@ -161,7 +168,7 @@
         this.insert.on("keypress", this.insertItem.bind(this));
         this.list.on("click", "input[type=checkbox]", this.toggleItem.bind(this));
         this.list.on("click", "i", this.deleteItem.bind(this));
-        this.list.on("dblclick", "span", this.editItem.bind(this));
+        this.list.on("dblclick", "div", this.editItem.bind(this)) ;
         this.filterDiv.on("click", "button", this.filterByState.bind(this));
 
     };
@@ -189,7 +196,7 @@
                 var i = getItemIndById(id, allNotes);
                 if (isRemove) {
                     allNotes.splice(i, 1);
-                } else if(isComplete) {
+                } else if(isComplete!=null) {
                     allNotes[i].completed = isComplete;
                 }else if(txt){
                     allNotes[i].text = txt ;
