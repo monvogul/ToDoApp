@@ -1,5 +1,5 @@
-##ToDoApp
+## ToDoApp ##
 
-###A Simple javascript/jquery to-do app
+### A Simple javascript/jquery to-do app
 
-Demo : [ToDoApp, https://monvogul.github.io/ToDoApp/]
+Demo :  https://monvogul.github.io/ToDoApp/
